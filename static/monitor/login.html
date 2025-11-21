@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FTCP 管理登录</title>
+  <style>
+    :root{--bg:#0f1220;--card:#151935;--accent:#6aa0ff;--txt:#e6e8f0;--danger:#ff6b6b;}
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(135deg,#0f1220,#0a0d1a);color:var(--txt);font-family:Inter,system-ui,Segoe UI,Arial}
+    .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px}
+    .card{width:100%;max-width:420px;background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.35);padding:28px}
+    h1{margin:0 0 8px;font-size:22px;font-weight:600}
+    p.sub{margin:0 0 16px;color:#9aa3b2;font-size:13px}
+    label{display:block;margin:14px 0 6px;font-size:13px;color:#b7c0d0}
+    input[type="password"]{width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:#0e1426;color:var(--txt);outline:none}
+    input[type="password"]::placeholder{color:#77809a}
+    button{width:100%;margin-top:16px;padding:12px 14px;border:none;border-radius:10px;background:linear-gradient(135deg,#4b7bec,#6aa0ff);color:#fff;font-weight:600;cursor:pointer}
+    button:hover{filter:brightness(1.05)}
+    .footer{margin-top:16px;text-align:center;color:#8b93a6;font-size:12px}
+    .toast{position:fixed;left:50%;top:24px;transform:translateX(-50%);min-width:280px;max-width:90vw;background:#1a1f2f;border:1px solid rgba(255,255,255,.12);color:#fff;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.4);padding:12px 14px;display:none;z-index:9999}
+    .toast.error{border-color:#ff6b6b}
+    .toast .title{font-weight:600;margin-bottom:4px}
+    .toast .msg{font-size:13px;color:#d6d8e3}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>管理登录</h1>
+      <p class="sub">请输入服务端启动时显示的登录密码</p>
+      <label for="password">登录密码</label>
+      <input id="password" type="password" placeholder="请输入密码" autocomplete="current-password" />
+      <button id="btnLogin">登录</button>
+      <div class="footer">登录成功后将跳转到监控页面</div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast error">
+    <div class="title">登录失败</div>
+    <div class="msg">请检查密码后重试</div>
+  </div>
+
+  <script>
+    const toast = document.getElementById('toast');
+    function showError(msg){
+      toast.querySelector('.msg').textContent = msg || '请求失败，请稍后重试';
+      toast.style.display = 'block';
+      setTimeout(()=>{ toast.style.display='none'; }, 3000);
+    }
+    document.getElementById('btnLogin').addEventListener('click', async ()=>{
+      const pwd = document.getElementById('password').value.trim();
+      if(!pwd){ showError('请输入密码'); return; }
+      try{
+        const resp = await fetch('/login', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({password: pwd})});
+        if(resp.ok){
+          // 登录成功，跳转到受保护监控页
+          location.href = '/';
+        }else{
+          showError(resp.status===401?'密码错误':'登录失败');
+        }
+      }catch(e){
+        showError('网络错误：' + e.message);
+      }
+    });
+    // 回车提交
+    document.getElementById('password').addEventListener('keydown',(e)=>{ if(e.key==='Enter'){ document.getElementById('btnLogin').click(); }});
+  </script>
+</body>
+</html>

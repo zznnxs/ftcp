@@ -1,0 +1,127 @@
+/* Admin UI enhancements */
+.toolbar{
+  display:flex; align-items:center; gap:12px; margin-bottom:16px
+}
+.input{
+  background: rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.12);
+  color:#e7ecff; padding:8px 10px; border-radius:8px; outline:none; width:100%;
+}
+.input::placeholder{ color:#8fa0c7 }
+.btn{
+  display:inline-flex; align-items:center; gap:8px;
+  background: linear-gradient(135deg, #7c5cff, #5a3bff);
+  color:#fff; border:none; padding:8px 12px; border-radius:10px; cursor:pointer;
+  box-shadow: 0 8px 20px rgba(124,92,255,0.35);
+}
+.btn.secondary{
+  background: rgba(255,255,255,0.08); color:#dfe6ff;
+  border:1px solid rgba(255,255,255,0.14); box-shadow:none
+}
+.btn.danger{
+  background: linear-gradient(135deg, #ff6b6b, #ff3b3b);
+  box-shadow: 0 8px 20px rgba(255,107,107,0.35);
+}
+.table{
+  width:100%; border-collapse: collapse; overflow:hidden; border-radius:12px;
+  border:1px solid rgba(255,255,255,0.12);
+}
+.table th,.table td{
+  padding:12px 14px; text-align:left; font-size:13px
+}
+.table thead th{
+  background: rgba(255,255,255,0.06); color:#cbd6ff; font-weight:600
+}
+.table tbody tr{ background: rgba(255,255,255,0.03) }
+.table tbody tr + tr{ border-top:1px solid rgba(255,255,255,0.08) }
+.chips{ display:flex; flex-wrap:wrap; gap:6px }
+.chip{
+  background: rgba(23,27,53,0.6); border:1px solid rgba(255,255,255,0.12);
+  color:#cfd7ff; padding:2px 8px; font-size:12px; border-radius:999px
+}
+
+/* Recent events panel with beautiful scrollbar */
+.log-panel{
+  max-height: 280px;
+  overflow-y: auto;
+  padding-right: 6px; /* leave room for scrollbar */
+}
+/* WebKit scrollbar */
+.log-panel::-webkit-scrollbar{
+  width: 8px;
+}
+.log-panel::-webkit-scrollbar-track{
+  background: rgba(255,255,255,0.05);
+  border-radius: 10px;
+}
+.log-panel::-webkit-scrollbar-thumb{
+  background: linear-gradient(180deg, #7c5cff, #5a3bff);
+  border-radius: 10px;
+}
+/* Firefox */
+.log-panel{
+  scrollbar-width: thin;
+  scrollbar-color: #6a54ff rgba(255,255,255,0.08);
+}
+.kv .input{ width:auto; min-width:240px }
+.flex{ display:flex; gap:12px; flex-wrap:wrap }
+.grow{ flex:1 }
+.status-msg{ color:#9aa4c7; font-size:12px; margin-top:6px }
+
+/* Inline actions next to ports input */
+.kv-actions .inline{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.kv-actions .inline .input{ flex:1 1 auto; min-width:180px }
+.kv-actions .inline .btn{ flex:0 0 auto }
+
+@media (max-width: 700px){
+  .kv-actions .inline .btn{ width:100% }
+}
+
+/* Actions cell: keep buttons on one line */
+.table td.actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  white-space:nowrap;
+}
+.table td.actions .btn{ flex:0 0 auto }
+
+/* Modal */
+.modal-backdrop{
+  position:fixed; inset:0; background: rgba(0,0,0,0.55); display:none; align-items:center; justify-content:center; z-index:999
+}
+.modal{
+  width:420px; max-width:90%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  border:1px solid rgba(255,255,255,0.12); border-radius:14px; padding:16px;
+  color:#e7ecff; box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+}
+.modal .title{ font-weight:700; margin-bottom:8px }
+.modal .actions{ display:flex; justify-content:flex-end; gap:8px; margin-top:12px }
+.show{ display:flex }
+
+/* Mobile enhancements */
+@media (max-width: 700px){
+  .toolbar{ flex-direction:column; align-items:stretch; gap:10px }
+  .kv{ grid-template-columns: 1fr !important }
+  .kv .input{ width:100%; min-width:0 }
+  .table{ display:block; overflow-x:auto }
+  .toolbar .btn{ width:100% }
+
+  /* 手机端：端口输入后面的新增按钮全宽且文字居中 */
+  .kv-actions .inline .btn{ width:100%; justify-content:center }
+
+  /* 手机端：操作列允许换行堆叠显示 */
+  .table td.actions{
+    flex-wrap: wrap;
+    white-space: normal;
+    gap: 8px;
+  }
+  /* 去掉删除按钮的左侧空隙（JS里有 inline margin-left） */
+  .table td.actions .btn.danger{ margin-left: 0 !important }
+}

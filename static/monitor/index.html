@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ftcp 实时监控</title>
+  <link rel="stylesheet" href="/static/monitor/style.css" />
+  <link rel="stylesheet" href="/static/monitor/admin.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="brand">
+      <div class="logo">Ftcp</div>
+      <div class="title">实时监控面板</div>
+    </div>
+    <div class="status" id="statusText">连接中...</div>
+  </header>
+
+  <main class="container">
+    <section class="grid">
+      <div class="card metric">
+        <div class="metric-label">活跃客户端</div>
+        <div class="metric-value" id="activeClients">-</div>
+        <div class="metric-sub" id="totalClients">累计 -</div>
+      </div>
+
+      <div class="card metric">
+        <div class="metric-label">公网连接</div>
+        <div class="metric-value" id="activePublicConns">-</div>
+        <div class="metric-sub" id="totalPublicAccepted">累计 -</div>
+      </div>
+
+      <div class="card metric">
+        <div class="metric-label">已绑定端口</div>
+        <div class="metric-value" id="portBindings">-</div>
+        <div class="metric-sub" id="tokensLoaded">授权令牌 -</div>
+      </div>
+
+      <div class="card metric">
+        <div class="metric-label">内存使用</div>
+        <div class="metric-value" id="memAlloc">-</div>
+        <div class="metric-sub" id="goRoutines">协程 -</div>
+      </div>
+    </section>
+
+    <section class="card wide">
+      <div class="card-header">
+        <div>近期事件</div>
+        <div class="sub" id="uptime">运行时长 -</div>
+      </div>
+      <div class="log-panel">
+        <ul class="log" id="recentErrors"></ul>
+
+      </div>
+    </section>
+
+    <section class="card wide">
+      <div class="card-header">
+        <div>服务信息</div>
+      </div>
+      <div class="kv">
+        <div><span>控制端地址</span><code id="serverAddr">-</code></div>
+        <div><span>监控端地址</span><code id="httpAddr">-</code></div>
+      </div>
+    </section>
+
+    <section class="card wide">
+      <div class="card-header">
+        <div>授权管理</div>
+      </div>
+      <div id="authSection">
+
+
+        <div id="mgrBox">
+          <div class="toolbar">
+            <input id="searchToken" class="input grow" placeholder="搜索 token 或 client_id..." />
+            <button id="btnRefresh" class="btn secondary">刷新</button>
+          </div>
+
+          <div class="kv">
+            <div><span>Token</span><input id="tok" class="input" /></div>
+            <div><span>Client ID</span><input id="cid" class="input" /></div>
+            <div class="kv-actions">
+              <span>端口列表</span>
+              <div class="inline">
+                <input id="ports" class="input" placeholder="示例: 7000,7001 (留空不限端口)" />
+                <button id="btnAdd" class="btn">新增授权</button>
+              </div>
+            </div>
+          </div>
+
+          <table class="table" style="margin-top:12px">
+            <thead>
+              <tr><th>Token</th><th>Client ID</th><th>端口</th><th style="width:120px">操作</th></tr>
+            </thead>
+            <tbody id="tokenTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 删除确认弹窗 -->
+      <div id="modalBackdrop" class="modal-backdrop">
+        <div class="modal">
+          <div class="title">确认删除</div>
+          <div id="modalMsg">确定删除该授权吗？</div>
+          <div class="actions">
+            <button id="btnCancelDel" class="btn secondary">取消</button>
+            <button id="btnConfirmDel" class="btn danger">删除</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+<div id="toast" class="toast" style="position:fixed;left:50%;top:24px;transform:translateX(-50%);min-width:280px;max-width:90vw;background:#1a1f2f;border:1px solid rgba(255,255,255,.12);color:#fff;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.4);padding:12px 14px;display:none;z-index:9999">
+  <div class="title" style="font-weight:600;margin-bottom:4px">提示</div>
+  <div class="msg" style="font-size:13px;color:#d6d8e3">请求失败，请稍后重试</div>
+</div>
+
+<!-- 通用提示框（对话框样式） -->
+<div id="dialogBackdrop" class="modal-backdrop" style="display:none">
+  <div class="modal">
+    <div class="title" id="dialogTitle">提示</div>
+    <div id="dialogMsg">发生错误</div>
+    <div class="actions">
+      <button id="dialogClose" class="btn">知道了</button>
+    </div>
+  </div>
+</div>
+
+  <footer class="footer">
+    <span>© Ftcp Monitor</span>
+  </footer>
+
+  <script src="/static/monitor/app.js"></script>
+</body>
+</html>
